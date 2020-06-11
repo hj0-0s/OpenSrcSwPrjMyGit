@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.IOException;
 import java.util.Scanner;
 
 public class UI {
@@ -7,7 +6,7 @@ public class UI {
     private Scanner sc;
 
     public UI(){
-        sc = new Scanner(System.in);
+        this.sc = new Scanner(System.in);
         this.directory = System.getProperty("user.home");
     }
 
