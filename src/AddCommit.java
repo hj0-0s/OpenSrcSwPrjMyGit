@@ -10,8 +10,15 @@ public class AddCommit {
     }
 
     public AddCommit(String directory) {
-        this.file = null;
         this.directory = directory;
+        try {
+            FileReader index = new FileReader(this.directory + "\\.myGit\\index.txt");
+            BufferedReader bufReader = new BufferedReader(index);
+            String addFile = bufReader.readLine();
+            this.file=addFile;
+        }catch(IOException e) {
+            this.file = null;
+        }
     }
 
     public void setFile(String file) {
@@ -39,8 +46,8 @@ public class AddCommit {
         if(file == null)
             return false;
         try {
-            FileReader HEAD = new FileReader(this.directory+"\\.myGit\\HEAD.txt");
-            BufferedReader bufReader = new BufferedReader(HEAD);
+            FileReader HEADReader = new FileReader(this.directory+"\\.myGit\\HEAD.txt");
+            BufferedReader bufReader = new BufferedReader(HEADReader);
             String version = bufReader.readLine().split(" ")[1];
             version = Integer.toString(Integer.parseInt(version.split("\\.",2)[0])+1)+".0.0";
             FileReader input = new FileReader(this.directory+"\\"+this.file);
@@ -51,11 +58,17 @@ public class AddCommit {
             while((word = input.read()) != -1){
                 output.write((char)word);
             }
-
+            this.file = null;
             bufReader.close();
-            HEAD.close();
+            HEADReader.close();
             input.close();
             output.close();
+            FileWriter HEADWriter = new FileWriter(this.directory+"\\.myGit\\HEAD.txt");
+            HEADWriter.write("version "+version+"\n");
+            HEADWriter.close();
+            FileWriter indexWriter = new FileWriter(this.directory+"\\.myGit\\index.txt");
+            indexWriter.write("");
+            indexWriter.close();
         }catch (IOException e){
         }
         return true;
